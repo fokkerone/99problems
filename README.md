@@ -356,4 +356,269 @@ Homework: create another test to find the Appicon Emoji
 
 ---
 
-export default Navbar;
+# Get Bitcoin Live Course
+
+We need the bitcoin course to calculate the money we all would gain if we had invested 100bucks in bitcoin back in 2011 (~1EUR)
+To do so, we need an api and will use this one "https://api.coindesk.com/v1/bpi/currentprice.json"
+
+Then we also need to mock the API for our TDD red green approach, Therefor we use the great MSWJS Lib.
+so let´s install it.
+
+```zsh
+ yarn install mswjs axios
+ mkdir mocks
+ touch mocks/handlers.js
+ touch mocks/server.js
+ touch mocks/browser.js
+ touch mocks/index.js
+```
+
+---
+
+#Q/A API request
+Q:
+
+- Where should we test this behavior?
+- Is this async?
+- What should be mocked? (uri/ get? post? Rest?)
+
+A:
+
+- in the in index.test?
+- depends (need to understan how NextJS works)
+- THE API?!
+
+Start with the failing (red) async test (async? asked why! or shot ya mouse and keep quite ;-))
+
+```javascript
+//index.test.js
+it("Find Bitcoin", async () => {
+  const { findByTestId } = render(<App />);
+  const Element = await findByTestId("bitcoincourse");
+
+  expect(Element).toBeInTheDocument();
+});
+```
+
+Make the test pass is easy
+
+```javascript
+<p data-testid="bitcoincourse">1000</p>
+```
+
+Now assert on the Value
+
+```javascript
+//index.test.tsx
+// add this assertion
+expect(Element).toHaveTextContent(/^1000$/);
+```
+
+supi dupi,
+we know find the Node + the value of our EUR mocked bitcoin course. YWEEAAH!
+Lets add the API
+
+```javascript
+//index.tsx
+import type { GetServerSideProps } from "next";
+import axios from "axios";
+import Head from "next/head";
+import Image from "next/image";
+import React, { useState } from "react";
+
+import styles from "../styles/Home.module.css";
+
+import Jumbotron from "react-bootstrap/Jumbotron";
+import Navbar from "../components/navbar";
+import { Container } from "react-bootstrap";
+import { rmSync } from "fs";
+
+export type Source = {
+  bpi?: {
+    EUR?: {},
+  },
+};
+
+type IApi = {
+  data?: Source,
+};
+
+const Home = ({ apidata }) => {
+  return (
+    <>
+      <Navbar />
+      <Container fluid data-testid="mainapp">
+        <h1>Nothing ventured, nothing gained. ¯\_(ツ)_/¯</h1>
+      </Container>
+    </>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps<any> = async () => {
+  const apidata: any = await axios
+    .get("https://api.coindesk.com/v1/bpi/currentprice.json")
+    .then((res) => res.data);
+  return {
+    props: {
+      apidata,
+    },
+  };
+};
+
+export default Home;
+```
+
+```javascript
+//index.test.tsx
+//+++ add one more test
+
+it("Server side Props for Bitcoin API are mocked correctly", async () => {
+  // const context = {
+  //   params: { id: "fjdks" } as ParsedUrlQuery,
+  // };
+  const response = await getServerSideProps();
+
+  expect(response).toEqual(
+    expect.objectContaining({
+      props: {
+        apidata: {
+          bpi: {
+            EUR: {
+              code: "EUR",
+              description: "Neuro",
+              rate: "1000",
+              rate_float: 1000,
+              symbol: "Nope",
+            },
+            GBP: {
+              code: "GBP",
+              description: "British Pound Sterling",
+              rate: "23,660.2198",
+              rate_float: 9923660.2198,
+              symbol: "&pound;",
+            },
+            USD: {
+              code: "USD",
+              description: "United States Dollar",
+              rate: "32,842.8967",
+              rate_float: 32842.8967,
+              symbol: "&#36;",
+            },
+          },
+          chartName: "Bitcoin",
+          disclaimer:
+            "This data was produced from the CoinDesk Bitcoin Price Index (USD). Non-USD currency data converted using hourly conversion rate from openexchangerates.org",
+          time: {
+            updated: "Jul 14, 2021 14:55:00 UTC",
+            updatedISO: "2021-07-14T14:55:00+00:00",
+            updateduk: "Jul 14, 2021 at 15:55 BST",
+          },
+        },
+      },
+    })
+  );
+});
+```
+
+Now to make it pass, we need to create a handler for MSW
+
+```javascript
+// mocks/handlers.js
+import { rest } from "msw";
+
+// eslint-disable-next-line import/prefer-default-export
+export const handlers = [
+  rest.get(
+    "https://api.coindesk.com/v1/bpi/currentprice.json",
+    (req, res, ctx) =>
+      res(
+        ctx.json({
+          time: {
+            updated: "Jul 14, 2021 14:55:00 UTC",
+            updatedISO: "2021-07-14T14:55:00+00:00",
+            updateduk: "Jul 14, 2021 at 15:55 BST",
+          },
+          disclaimer:
+            "This data was produced from the CoinDesk Bitcoin Price Index (USD). Non-USD currency data converted using hourly conversion rate from openexchangerates.org",
+          chartName: "Bitcoin",
+          bpi: {
+            USD: {
+              code: "USD",
+              symbol: "&#36;",
+              rate: "32,842.8967",
+              description: "United States Dollar",
+              rate_float: 32842.8967,
+            },
+            GBP: {
+              code: "GBP",
+              symbol: "&pound;",
+              rate: "23,660.2198",
+              description: "British Pound Sterling",
+              rate_float: 9923660.2198,
+            },
+            EUR: {
+              code: "EUR",
+              symbol: "Nope",
+              rate: "1000",
+              description: "Neuro",
+              rate_float: 1000,
+            },
+          },
+        })
+      )
+  ),
+];
+```
+
+create a mock/server.js file
+
+```javascript
+//mock/server.js
+import { setupServer } from "msw/node";
+import { handlers } from "./handlers";
+
+export const server = setupServer(...handlers);
+```
+
+Now we mock the API in the testSetup
+
+```javascript
+//setupTests.js
+//import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
+import { server } from "./mocks/server";
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
+
+As you see we can now assert on the mocked API, geil!
+
+okay, now its get complicated, more or less
+
+1. we need to understand how and where is the Home component,
+
+- in Next? No!
+- in Jest/Dom yes!
+- okay therefore we need to supply the props!! Takes me some time to get the idea ;-)
+
+```javascript
+it("Find Bitcoin", async () => {
+  // we need to resolve on the ServersideProps, which are normally handled via NextJS
+  const response = await getServerSideProps();
+
+  //await and then pass them as props
+  const { getByTestId, getByRole } = render(
+    <App apidata={response.props.apidata} />
+  );
+  const Element = await screen.findByTestId("bitcoincourse");
+
+  // et voila, se la les mocked data :-)
+  expect(Element).toHaveTextContent("1000");
+});
+```
+
+From here on we might go on impleting new features to our million dollar baby
+
+Next we learn, how to handle user inputs, assert on them and finally calculate our bank account of bitcoin millions
