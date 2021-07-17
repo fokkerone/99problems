@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "make": "spectacle-cli -s ../README.md -p 3444",
-    "start": "spectacle-cli -s demo.md -p 3444"
+    "start": "spectacle-cli -s ../README.md -p 3444"
   },
   "dependencies": {
     "spectacle": "^8.3.0",

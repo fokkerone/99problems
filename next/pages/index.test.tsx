@@ -127,4 +127,10 @@ describe("App", () => {
     userEvent.type(Input, "99");
     expect(Element).toHaveTextContent(currencyFormater(99 * 1000));
   });
+
+  it("Calculate the EUR amount, correctly", () => {
+    const value = 1000;
+    const assertion = currencyFormater(value);
+    expect(assertion).toBe("€1,000.00");
+  });
 });

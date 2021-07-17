@@ -54,7 +54,7 @@ const Home = ({ apidata }) => {
         </Row>
         <Row>
           <p className={styles.currentcourse}>
-            <span>Current Bitcoin course </span>
+            <span>Current Bitcoin course</span>
             <span data-testid="bitcoincourse">
               {currencyFormater(bitvalue)}
             </span>
