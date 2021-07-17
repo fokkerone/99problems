@@ -1,16 +1,34 @@
-# 99problems and the pitch ain´t one!
+# 99problems
 
-Just React TDD live Coding sessionm to develop a nextJs App on a red->green TDD way with jest/React-testing-Library an MSWJS...
+## And the pitch ain´t one!
+
+---
+
+# What we will learn
+
+Just lil React TDD live Coding session to develop a nextJs App on a red->green TDD way with jest/React-testing-Library an MSWJS.
+
+---
 
 # Checkout Repo
 
+To checkout the boilerplate just follow these simple steps.
+
 ```zsh
 git clone git@github.com:fokkerone/99problems.git
+git checkout boilerplate
 cd 99problems
+
 code .
+cd next
+yarn dev
 ```
 
-# Steps done for starterbranch
+---
+
+# Detailed steps for starterbranch
+
+Create a NextJS app.
 
 ```zsh
 npx create-next-app
@@ -21,12 +39,18 @@ yarn create next-app
 
 I use yarn here and for the rest ;-)
 
+---
+
+# Startup the app
+
+To see the Next App in dev mode.
+
 ```zsh
 cd next
 yarn dev
 ```
 
-### Switch to Typescript
+Okay, let´s add Typescript to our project
 
 ```zsh
 touch tsconfig.json
@@ -34,7 +58,11 @@ touch tsconfig.json
 yarn add --dev typescript @types/react
 ```
 
-### Install deps for Testing Library
+---
+
+## Install deps for Testing Library
+
+Testing Library needs the following setup.
 
 ```zsh
 yarn add -D jest jest-dom @testing-library/react @testing-library/jest-dom @testing-library/dom babel-jest
@@ -45,13 +73,18 @@ touch .babelrc
 
 ```
 
-add this to BabelFile
+We use Babel to compile Typescript in Jest/Dom
 
-```Json
+```Javascript
+// .babel.rc
 {
   "presets": ["next/babel"]
 }
 ```
+
+---
+
+Create a jest config file
 
 ```zsh
 touch jest.config.js
@@ -59,7 +92,9 @@ touch jest.config.js
 
 This file tells jest that we want to ignore files in our node_modules directory, and also the .next (this is where Next compiles our application) directory. We want jest to run our setupTests file before running our tests, and we want it to transform our JavaScript using babel-jest.
 
-Add this please:
+---
+
+## Add this please:
 
 ```javascript
 //import identityobjproxy from "identity-obj-proxy";
@@ -107,7 +142,9 @@ module.exports = {
 };
 ```
 
-Tip! if there is a problem with css imports use Mock in moduleMapper section
+---
+
+**Tip:**If there is a problem with css imports use Mock in moduleMapper section
 
 create **mocks** folder and add 2 files
 
@@ -117,11 +154,15 @@ create **mocks** folder and add 2 files
   touch __mocks__/styleMock.js
 ```
 
-in both Mockfiles add
+in both mockfiles please add
 
 ```javascript
 module.exports = {};
 ```
+
+---
+
+# Good things takes a while
 
 puhhhh ...finally add
 "test": "jest"
@@ -133,9 +174,12 @@ Finally our first test, \*yeah!
 touch pages/index.test.tsx
 ```
 
-add this
+---
+
+add this to our first test suite
 
 ```javascript
+//pages/index.test.tsx
 import { render, screen } from "@testing-library/react";
 import App from "./index";
 
@@ -149,33 +193,59 @@ describe("App", () => {
 });
 ```
 
-make it pass
+start jest...
 
 ```zsh
   yarn test
 ```
 
-it should pass thats ist for the boilerplate.
+---
 
-## Okay lets start with our App
+# This is our boilerplate
 
-we will work on the red-green approach, which means we create a failing test/feature and than make it pass.
-so we start jest in watch mode
+It should pass the first test and should include all we need to create our Bitcoin millionair wannabe app.
+
+### Questions so far?
+
+1...2..3 okay let´s go
+
+---
+
+# Okay lets start with our App
+
+We will work with the red->green approach.
+Which means we create a failing test/feature and than make it pass. refactor…feature/test…pass…and so on.
+
+Lets start jest in watch mode, so we allways see what we got.
 
 ```zsh
   yarn test --watch
   // want more look here https://jestjs.io/docs/cli
 ```
 
-Next we delete all of the index page content just return an empty <div />. And the test will fail. So this time green->red ;-)
+**We do not use the browser to develop our app**
+
+---
+
+# Remove the Next Template
+
+Next we delete all of the index page content just return an empty div. And our first test will fail.
+
+So this time refactor (green->red)
+
+---
 
 ## Setup React-bootstrap
+
+We do not want to loose time developing UI Components, so lets use Bootstrap.
 
 ```zsh
   yarn add react-bootstrap
 ```
 
-lets create our first component
+---
+
+Lets create our first component, a new test, and css.
 
 ```zsh
   mkdir components && touch components/navbar.tsx
@@ -183,9 +253,10 @@ lets create our first component
   touch components/navbar.module.css
 ```
 
-Think red green, create your first test
+Think red green, and creare your test first.
 
 ```javascript
+//omponents/navbar.test.tsx
 import { render, screen } from "@testing-library/react";
 import Navbar from "./navbar";
 
@@ -199,11 +270,18 @@ describe("App", () => {
 });
 ```
 
-and see it fail...
+---
 
-to make it pass add this to the component file
+## and see it fail...
+
+Go back to to our test and disscus first how to make it pass.
+
+---
+
+## Our first Component
 
 ```javascript
+//components/navbar.tsx
 import React from "react";
 import { Container, Navbar as BS_Navbar } from "react-bootstrap";
 import styles from "./navbar.module.css";
@@ -223,8 +301,9 @@ const Navbar = () => {
 export default Navbar;
 ```
 
-Attention!
-data-testid="navbar" is needed to make the test pass. (Think ids in CSS)
+---
+
+**Attention!** data-testid="navbar" is needed to make the test pass. (Think ids in CSS)
 
 Wonderfull, to make it shine...a bit, add this to the module.css
 
@@ -275,6 +354,8 @@ Wonderfull, to make it shine...a bit, add this to the module.css
 }
 ```
 
+---
+
 Okay one more thing.
 
 ```javascript
@@ -286,56 +367,80 @@ it("Navbar renders without crashing", () => {
 });
 ```
 
-We can also use Aria Roles to query the Elememt in the DOM...think about it!
-data-testid needs to get stripped out of the final build, while testquering with aria attributes and roles
+We can also use Aria Roles to query the Element in the DOM...think about it!
+data-testid needs to get stripped out of the final build, while test-quering with aria attributes and roles creates a barrier free / seo optimizes App on the go.
 
-okay what else could we test?
+---
+
+## Okay what else could we test?
 
 - Content of Components
 - Arangement of Components
-  . Interaction
+- User Interaction/behavior
 - CSS
-- Data, asynchronity
-  ...
+- Data, async
+- ...
+
+There is a lot we might test. Scope today is to crap the concepts
+
+---
 
 # Cheatcheats
 
-here are some interessting links
-https://testing-library.com/docs/react-testing-library/cheatsheet/
-https://github.com/sapegin/jest-cheat-sheet
-https://github.com/testing-library/jest-dom
-https://testing-library.com/docs/ecosystem-user-event/
+Here are some interesting links:
 
-and we will...
+- https://testing-library.com/docs/react-testing-library/cheatsheet/
+- https://github.com/sapegin/jest-cheat-sheet
+- https://github.com/testing-library/jest-dom
+- https://testing-library.com/docs/ecosystem-user-event/
+
+And we will use a lot of these…
+
+---
 
 # TDD vs BDD
 
-They sound similar, and it’s easy to get them confused, but how do we unravel TDD vs BDD? In TDD (Test Driven Development), how well the functionality conforms is checked by a written test case. As the code evolves, the original test cases can give false results. BDD (Behavior Driven Development) is also a test-first approach but differs by testing the system’s actual behavior from the end-users perspective. To me RTL is clearly BDD!
+> They sound similar, and it’s easy to get them confused, but how do we unravel TDD vs BDD? In TDD (Test Driven Development), how well the functionality conforms is checked by a written test case. As the code evolves, the original test cases can give false results. BDD (Behavior Driven Development) is also a test-first approach but differs by testing the system’s actual behavior from the end-users perspective.
 
-this is was the inventor says:
+**To me RTL is clearly BDD!**
 
-The more your tests resemble the way your software is used, the more confidence they can give you.
-https://twitter.com/kentcdodds/status/977018512689455106?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E977018512689455106%7Ctwgr%5E%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Fwww.giffgaff.io%2Ftech%2Freact-test-driven-development
+---
 
-# how to "plan" tests
+# React Testing Library
 
-Before we can start writing tests, and the code to pass them, we have to decide what we should be testing when writing React components. As the creator of React Testing Library himself, Kent C. Dodds says, you should endeavour to make your tests as similar to how users (human or other systems) use your software.
+This is was the inventor says:
 
-Forget the isolation, stubbing, mocking.. brainfucking way of classic unittests!!!
+> The more your tests resemble the way your software is used, the more confidence they can give you. [Twitter](https://twitter.com/kentcdodds/status/977018512689455106?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E977018512689455106%7Ctwgr%5E%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Fwww.giffgaff.io%2Ftech%2Freact-test-driven-development)
 
-- What is the minimum ui element to test the behavior?
-- user interaction need to test this behavior?
-- is the test async, in lifecycle, data, etc?
-- how make test fail after it turns green, at least once!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-- what might be the ARIA Role for this particular component
+---
+
+# How to "plan" tests
+
+Before we can start writing tests, and the code to pass them, we have to decide what/how should be testing when writing React components. As the creator of React Testing Library himself, Kent C. Dodds says,
+
+> You should endeavour to make your tests as similar to how users (human or other systems) use your software.
+
+**Forget the isolation, stubbing, mocking.. brainfucking way of classic unittests!!!**
+
+---
+
+## Questions you might asked yourself
+
+- What is the minimum UI element to test the behavior?
+- Is user interaction needed to test this behavior?
+- Is the test async (lifecycle, data…)?
+- how make test fail after it turns green, at least once??!!!!!
+- What might be the ARIA/Role for this particular component?
+- …
 
 ---
 
 # Find App Name
 
-create an new test case in navbar.test.tsx
+Create an new test case
 
 ```javascript
+//navbar.test.tsx
 it("finds the Appname", () => {
   const { getByTestId } = render(<Navbar />);
   const Element = getByTestId("navbar");
@@ -343,16 +448,20 @@ it("finds the Appname", () => {
 });
 ```
 
-Here we render the Navbar (standalone) and use a different jest-dom matcher, we search the textcontent insidee the Navbar.
-more here https://github.com/testing-library/jest-dom#tohavetextcontent
+Here we render the Navbar (standalone!) and use a different jest-dom matcher, we assert on the textcontent inside the Navbar.
+More here [Jest/Dom](https://github.com/testing-library/jest-dom#tohavetextcontent)
 
-then make it pass
+---
+
+## Then make it pass
 
 ```
+// add this in our Navbar
+
 <p className={styles.text}>50Cent</p>
 ```
 
-Homework: create another test to find the Appicon Emoji
+> **Homework:** Create another test to find the Appicon Emoji
 
 ---
 
@@ -361,8 +470,11 @@ Homework: create another test to find the Appicon Emoji
 We need the bitcoin course to calculate the money we all would gain if we had invested 100bucks in bitcoin back in 2011 (~1EUR)
 To do so, we need an api and will use this one "https://api.coindesk.com/v1/bpi/currentprice.json"
 
-Then we also need to mock the API for our TDD red green approach, Therefor we use the great MSWJS Lib.
-so let´s install it.
+Next we also need to mock the API for our TDD red green approach, Therefor we use the great MSWJS Lib.
+
+---
+
+# So let´s install it.
 
 ```zsh
  yarn install mswjs axios
@@ -375,18 +487,23 @@ so let´s install it.
 
 ---
 
-#Q/A API request
+# Q/A API request
+
 Q:
 
 - Where should we test this behavior?
 - Is this async?
 - What should be mocked? (uri/ get? post? Rest?)
 
+---
+
 A:
 
 - in the in index.test?
 - depends (need to understan how NextJS works)
 - THE API?!
+
+---
 
 Start with the failing (red) async test (async? asked why! or shot ya mouse and keep quite ;-))
 
@@ -406,7 +523,9 @@ Make the test pass is easy
 <p data-testid="bitcoincourse">1000</p>
 ```
 
-Now assert on the Value
+---
+
+Now refactor and assert on the Value
 
 ```javascript
 //index.test.tsx
@@ -414,9 +533,13 @@ Now assert on the Value
 expect(Element).toHaveTextContent(/^1000$/);
 ```
 
-supi dupi,
-we know find the Node + the value of our EUR mocked bitcoin course. YWEEAAH!
+## supi dupi,
+
+We now are able to approve the Dom Node exist and assert the given value of our bitcoin course. **YEEAAH!**
+
 Lets add the API
+
+---
 
 ```javascript
 //index.tsx
@@ -442,7 +565,11 @@ export type Source = {
 type IApi = {
   data?: Source,
 };
+```
 
+---
+
+```javascript
 const Home = ({ apidata }) => {
   return (
     <>
@@ -467,6 +594,10 @@ export const getServerSideProps: GetServerSideProps<any> = async () => {
 
 export default Home;
 ```
+
+---
+
+## Create a test to prove on the given mock data
 
 ```javascript
 //index.test.tsx
@@ -520,6 +651,8 @@ it("Server side Props for Bitcoin API are mocked correctly", async () => {
 });
 ```
 
+---
+
 Now to make it pass, we need to create a handler for MSW
 
 ```javascript
@@ -570,6 +703,8 @@ export const handlers = [
 ];
 ```
 
+---
+
 create a mock/server.js file
 
 ```javascript
@@ -593,15 +728,19 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 ```
 
+---
+
 As you see we can now assert on the mocked API, geil!
 
-okay, now its get complicated, more or less
+**okay, now its get a bit more complicated**
 
-1. we need to understand how and where is the Home component,
+We need to understand how and where is the Home component,
 
 - in Next? No!
 - in Jest/Dom yes!
 - okay therefore we need to supply the props!! Takes me some time to get the idea ;-)
+
+---
 
 ```javascript
 it("Find Bitcoin", async () => {
@@ -619,17 +758,22 @@ it("Find Bitcoin", async () => {
 });
 ```
 
-Attention! there are some Typescript bugs and hacks. Forgive me Typescript!
+> Attention! there are some Typescript bugs and hacks. Forgive me Typescript!
+
+---
 
 From here on we might go on impleting new features to our million dollar baby
 
 Next we learn, how to handle user inputs, assert on them and finally calculate our bank account of bitcoin millions
 But have a look at our fantatic App, for the FIRST time in the brower.( http://localhost:3000)
 
-GEILOMAT!
-If you like to start here checkout the origin/2.MSW branch
+**GEILOMAT!**
 
-New we assert on the App header
+> If you like to start here checkout the origin/2.MSW branch
+
+---
+
+Now we assert on the App header
 
 ```javascript
 it(`finds the ¯\_(ツ)_/¯, and some text`, () => {
@@ -640,10 +784,15 @@ it(`finds the ¯\_(ツ)_/¯, and some text`, () => {
 });
 ```
 
-should pass
+> How to regex on this /\ arms? Help me!
+
+But for now good enough and it should pass.
+
+---
 
 Lets add an input field
-Attention: it.only skips the rest of the testsuite test.
+
+**Tipp:** _it.only_ skips the rest of the testsuite test. One easy debug tipp
 
 ```javascript
   it.only("finds the the inputfield", () => {
@@ -655,7 +804,9 @@ Attention: it.only skips the rest of the testsuite test.
 });
 ```
 
-make it pass
+---
+
+Make it pass
 
 ```javascript
 // ++ add this to the imports
@@ -666,7 +817,10 @@ import Form from "react-bootstrap/Form";
 ```
 
 And it passes, great
-add a value for the form field using useState
+
+---
+
+Add a value for the form field using useState
 
 ```js
 const [bitteeinbit, setBitcoins] = useState(1);
@@ -682,16 +836,25 @@ expect(Element).toHaveValue(null);
 expect(Element).toHaveValue(1);
 ```
 
-and it turns green. awesome
+and it turns green. **awesome**
 
-now let the user edit the form
-remember https://testing-library.com/docs/ecosystem-user-event/
+---
+
+# User interaction
+
+Now let the user edit the form input.
+
+**Remember:** https://testing-library.com/docs/ecosystem-user-event/
+
+So, let´s install it.
 
 ```zsh
 yarn add -D @testing-library/user-event
 ```
 
-import into the index.test.tsx
+---
+
+Import into the index.test.tsx
 to accomplish this
 
 ```ts
@@ -709,7 +872,9 @@ to make it pass, we need to create
 - use Bitcoin State
 - a onChange callback on the Form (https://react-bootstrap.github.io/components/forms/)
 
-ok. lets go for it
+**Ok. Rock´n Roll**
+
+---
 
 ```js
   onChange={(e) => {
@@ -717,8 +882,9 @@ ok. lets go for it
   }}
 ```
 
-does´t passs ;-(
-1 + 99 = 99. so we need to clear the field before editing?
+doesn´t passs ;-(
+
+> 1 + 99 = 99. so maybe we need to clear the field before editing?
 
 ```js
 // add
@@ -726,9 +892,13 @@ does´t passs ;-(
 userEvent.clear(Element);
 ```
 
-And booom passes
+**And boom, it passes**
 
-okay let´s finalize. and caculate our mega revenue
+---
+
+# Okay let´s finalize.
+
+And caculate the huge loss in revenue.
 
 ```js
  it.only("user type in Form", () => {
@@ -745,6 +915,8 @@ and make it pass
 ```js
 <p data-testid="revenue">Revenue</p>
 ```
+
+---
 
 Exend it
 
@@ -767,3 +939,7 @@ Exend it
 });
 });
 ```
+
+---
+
+CSS, Test, Implementation

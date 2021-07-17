@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import App, { getServerSideProps } from "./index";
+import userEvent from "@testing-library/user-event";
+import App, { getServerSideProps, currencyFormater } from "./index";
 
 describe("App", () => {
   it("Navbar renders without crashing with test id", () => {
@@ -83,6 +84,47 @@ describe("App", () => {
       <App apidata={response.props.apidata} />
     );
     const Element = await screen.findByTestId("bitcoincourse");
-    expect(Element).toHaveTextContent("1000");
+    expect(Element).toHaveTextContent(currencyFormater(1000));
+  });
+
+  it(`finds the ¯\_(ツ)_/¯, and some text`, () => {
+    const { getByTestId, getByRole } = render(<App />);
+    const Element = getByTestId("header");
+    expect(Element).toHaveTextContent(/(ツ)/);
+    expect(Element).toHaveTextContent(/Nothing ventured/);
+  });
+
+  it("finds the the inputfield", () => {
+    const { getByRole } = render(<App />);
+    const Element = getByRole("spinbutton");
+    expect(Element).toBeInTheDocument();
+    expect(Element).toHaveValue(1);
+  });
+
+  it("user type in Form", () => {
+    const { getByRole } = render(<App />);
+    const Element = getByRole("spinbutton");
+    userEvent.clear(Element);
+    userEvent.type(Element, "99");
+    expect(Element).toHaveValue(99);
+  });
+
+  it("Revenue is here and works", () => {
+    const { getByTestId } = render(<App />);
+    const Element = getByTestId("revenue");
+    expect(Element).toBeInTheDocument();
+  });
+
+  it("user edit and the revnue is calculated properly", async () => {
+    const response = await getServerSideProps();
+
+    const { getByTestId, getByRole } = render(
+      <App apidata={response.props.apidata} />
+    );
+    const Element = getByTestId("revenue");
+    const Input = getByRole("spinbutton");
+    userEvent.clear(Input);
+    userEvent.type(Input, "99");
+    expect(Element).toHaveTextContent(currencyFormater(99 * 1000));
   });
 });
