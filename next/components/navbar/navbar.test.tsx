@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Navbar from "./navbar";
+import Navbar from "./index";
 
 describe("App", () => {
   it("Navbar renders without crashing with test id", () => {

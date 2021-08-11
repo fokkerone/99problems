@@ -1,0 +1,11 @@
+.box {
+  height: 250px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 48px 4px rgba(16, 134, 232, 0.43);
+  border: 3px solid rgba(90, 120, 255, 0.6);
+}
+
+.boxtext {
+  color: rgb(32, 94, 151);
+  padding: 1rem 0 0 1rem;
+}

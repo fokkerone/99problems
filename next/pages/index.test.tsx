@@ -115,7 +115,7 @@ describe("App", () => {
     expect(Element).toBeInTheDocument();
   });
 
-  it("user edit and the revnue is calculated properly", async () => {
+  it("user edit and the revenue is calculated properly", async () => {
     const response = await getServerSideProps();
 
     const { getByTestId, getByRole } = render(

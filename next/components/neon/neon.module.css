@@ -1,0 +1,22 @@
+.textbox {
+  text-align: center;
+  padding: 2vw;
+  border: 5px solid #1086e8;
+
+  border-radius: 8px;
+
+  margin-top: 12vh;
+  box-shadow: 0px 0px 48px 4px rgba(16, 134, 232, 0.63);
+  transform: translate3d(0);
+}
+
+.header {
+  composes: textflicker from "../../styles/animation.css";
+  color: #ff00e6;
+  font-family: "Raleway", sans-serif;
+  font-size: 64px;
+  letter-spacing: 10px;
+
+  transform: translate3d(0);
+  font-weight: 600;
+}

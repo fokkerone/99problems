@@ -1,0 +1,17 @@
+.box {
+  composes: box from "../../styles/common.css";
+}
+.boxtext {
+  composes: boxtext from "../../styles/common.css";
+}
+
+.lost {
+  composes: textflicker from "../../styles/animation.css";
+  font-weight: 800;
+  text-align: center;
+  font-size: 5rem;
+  margin: 3% auto;
+  width: 90%;
+  color: rgb(190, 158, 182);
+  transform: translate3d(0);
+}

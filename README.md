@@ -866,6 +866,8 @@ Import into the index.test.tsx
 to accomplish this
 
 ```ts
+import userEvent from "@testing-library/user-event";
+
 it.only("user type in Form", () => {
   const { getByRole } = render(<App />);
   const Element = getByRole("spinbutton");
@@ -904,15 +906,14 @@ userEvent.clear(Element);
 
 ---
 
-# Okay let´s finalize.
+# Calculate our revenue...
 
 And caculate the huge loss in revenue.
 
 ```js
- it.only("user type in Form", () => {
+   it("Revenue is here and works", () => {
     const { getByTestId } = render(<App />);
     const Element = getByTestId("revenue");
-
     expect(Element).toBeInTheDocument();
   });
 });
