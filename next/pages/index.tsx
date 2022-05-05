@@ -64,7 +64,7 @@ const Home = ({ apidata }) => {
           <Col xs={3}>
             <div className={styles.box}>
               <Form.Label className={styles.boxtext}>
-                Bitcoins bought in 2011 (~1 EUR)
+                Bitcoins bought in 20111 (~1 EUR)
               </Form.Label>
               <Form.Control
                 type="number"
